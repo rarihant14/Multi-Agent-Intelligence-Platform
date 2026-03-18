@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroAgent - Multi-Agent AI</title>
+    <!-- ✅ FIXED: Correct path for CSS -->
+    <<link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <h1>NeuroAgent</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat">
+                        <span class="stat-label">Model</span>
+                        <select id="model-selector" class="model-dropdown">
+                            <option value="openai/gpt-oss-120b">GPT-OSS 120B</option>
+                            <option value="llama-3.3-70b-versatile" selected>Llama 3.3 70B</option>
+                            <option value="llama-3.1-8b-instant">Llama 3.1 8B</option>
+                        </select>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Status</span>
+                        <span class="stat-value status-ready">● Ready</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Left Sidebar -->
+            <aside class="sidebar sidebar-left">
+                <div class="sidebar-section">
+                    <h3>🤖 Agents</h3>
+                    <div class="agents-grid" id="agents-grid">
+                        <div class="agent-card">
+                            <div class="agent-name">Knowledge</div>
+                            <div class="agent-status ready">Ready</div>
+                            <div class="agent-stat" id="knowledge-stat">0 queries</div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-name">Research</div>
+                            <div class="agent-status ready">Ready</div>
+                            <div class="agent-stat" id="research-stat">0 queries</div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-name">Document</div>
+                            <div class="agent-status ready">Ready</div>
+                            <div class="agent-stat" id="document-stat">0 queries</div>
+                        </div>
+                        <div class="agent-card">
+                            <div class="agent-name">Summary</div>
+                            <div class="agent-status ready">Ready</div>
+                            <div class="agent-stat" id="summary-stat">0 queries</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>📤 Upload PDF</h3>
+                    <div class="upload-zone" id="upload-zone">
+                        <div class="upload-icon">📄</div>
+                        <p>Drag & drop PDF or click</p>
+                        <input type="file" id="pdf-input" accept=".pdf" style="display: none;">
+                    </div>
+                    <div id="upload-status" style="margin-top: 10px; display: none;"></div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>⚙️ Settings</h3>
+                    <div class="setting">
+                        <label>Temperature</label>
+                        <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7">
+                        <span id="temp-value">0.7</span>
+                    </div>
+                    <div class="setting">
+                        <label>Max Tokens</label>
+                        <input type="number" id="max-tokens" min="256" max="4096" value="1024">
+                    </div>
+                    <div class="setting">
+                        <label>Model Info</label>
+                        <div id="model-info" class="model-info">
+                            <p id="model-info-text">Llama 3.3 70B - Versatile and balanced</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger" id="clear-btn">Clear Chat</button>
+            </aside>
+
+            <!-- Chat Area -->
+            <section class="chat-area">
+                <div class="welcome-message" id="welcome">
+                    <div class="welcome-icon">🚀</div>
+                    <h2>Welcome to NeuroAgent</h2>
+                    <p>Multi-Agent Intelligence Platform powered by LangGraph</p>
+                    <div class="features">
+                        <div class="feature">
+                            <span>🤖</span>
+                            <p>4 Intelligent Agents</p>
+                        </div>
+                        <div class="feature">
+                            <span>⚡</span>
+                            <p>Advanced AI Models</p>
+                        </div>
+                        <div class="feature">
+                            <span>🔍</span>
+                            <p>Web Search</p>
+                        </div>
+                        <div class="feature">
+                            <span>📄</span>
+                            <p>PDF Analysis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messages" id="messages"></div>
+
+                <div class="input-area">
+                    <textarea 
+                        id="input-textarea" 
+                        placeholder="Ask anything... (Shift+Enter for new line)" 
+                        rows="3"
+                    ></textarea>
+                    <div class="input-controls">
+                        <span id="char-count">0 / 5000</span>
+                        <button class="btn btn-primary" id="send-btn">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar -->
+            <aside class="sidebar sidebar-right">
+                <div class="sidebar-section">
+                    <h3>📊 System Status</h3>
+                    <div class="status-cards">
+                        <div class="status-card">
+                            <div class="status-label">API Status</div>
+                            <div class="status-value connected">● Connected</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-label">Messages</div>
+                            <div class="status-value" id="message-count">0</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-label">Response Time</div>
+                            <div class="status-value" id="response-time">0ms</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-label">Tokens Used</div>
+                            <div class="status-value" id="tokens-used">0</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-label">Last Agent</div>
+                            <div class="status-value" id="last-agent">—</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-label">Current Model</div>
+                            <div class="status-value" id="current-model-display">Llama 3.3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>ℹ️ Model Specs</h3>
+                    <div id="model-specs" class="info-text">
+                        <p><strong>Llama 3.3 70B</strong></p>
+                        <p>Provider: Meta</p>
+                        <p>Context: 8,000 tokens</p>
+                        <p>Speed: Very fast</p>
+                        <p>Cost: Low</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>ℹ️ Info</h3>
+                    <div class="info-text">
+                        <p><strong>LangGraph Orchestrator</strong></p>
+                        <p>Graph-based multi-agent system with advanced model selection</p>
+                        <p style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
+                            v2.2.0 | Powered by Advanced AI Models
+                        </p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- ✅ FIXED: Correct paths for JS files -->
+    <script src="/js/api.js"></script>
+    <script src="/js/agents.js"></script>
+    <script src="/js/models.js"></script>
+    <script src="/js/main.js"></script>
+</body>
+</html>

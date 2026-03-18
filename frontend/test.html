@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test - NeuroAgent</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .test-box {
+            padding: 40px;
+            text-align: center;
+            border-radius: 12px;
+        }
+        
+        .css-loaded {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+        
+        .css-not-loaded {
+            background: white;
+            border: 2px solid black;
+            color: black;
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .debug-info {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="test" class="test-box css-not-loaded">
+        <h1>🧪 CSS Test</h1>
+        <div class="status" id="status">Loading...</div>
+        <div class="debug-info">
+            <p><strong>Expected:</strong></p>
+            <p>✓ Dark background (not white)</p>
+            <p>✓ Cyan border</p>
+            <p>✓ Cyan text</p>
+            <p><strong>If you see this in white/black:</strong></p>
+            <p>✗ CSS is NOT loading!</p>
+        </div>
+    </div>
+
+    <script>
+        // Check if CSS loaded by checking computed styles
+        function checkCSS() {
+            const testBox = document.getElementById('test');
+            const computedStyle = window.getComputedStyle(testBox);
+            
+            // Check if CSS variables are available
+            const bgColor = computedStyle.backgroundColor;
+            const borderColor = computedStyle.borderColor;
+            
+            console.log('Background Color:', bgColor);
+            console.log('Border Color:', borderColor);
+            
+            // If background is still white, CSS didn't load
+            const statusDiv = document.getElementById('status');
+            
+            if (bgColor.includes('255') && borderColor.includes('255')) {
+                // White background = CSS not loaded
+                statusDiv.innerHTML = '❌ CSS NOT LOADED!<br>Check console for errors';
+                statusDiv.style.color = 'red';
+                console.error('❌ CSS file not loading!');
+                testBox.classList.remove('css-loaded');
+            } else {
+                // CSS loaded successfully
+                statusDiv.innerHTML = '✅ CSS LOADED SUCCESSFULLY!<br>Dark theme is working!';
+                statusDiv.style.color = 'var(--accent-cyan)';
+                testBox.classList.add('css-loaded');
+                console.log('✅ CSS file loaded successfully!');
+            }
+        }
+        
+        // Check after page loads
+        window.addEventListener('load', checkCSS);
+        setTimeout(checkCSS, 1000);
+    </script>
+</body>
+</html>
