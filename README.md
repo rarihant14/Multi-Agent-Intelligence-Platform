@@ -1,7 +1,7 @@
-# 🚀 Multi-Agent Intelligence System  
+# 🚀 Multi-Agent  System  
 **Powered by LangGraph | Groq | Tavily | LangSmith**
 
-A production-ready multi-agent AI system with a modern dark-themed UI, designed for intelligent task orchestration, document analysis, and real-time agent collaboration.
+A  multi-agent AI system with a modern dark-themed UI, designed for intelligent task orchestration, document analysis, and real-time agent collaboration.
 
 ---
 
@@ -129,7 +129,6 @@ http://127.0.0.1:8000
 ## 🧠 Future Improvements
 
 - Add authentication system  
-- Deploy on cloud (AWS / GCP)  
-- Add voice interface (Jarvis-style)  
+- Deploy on cloud (AWS / GCP)   
 - Integrate vector DB (FAISS / Pinecone)  
 - Fine-tuned agent routing  
